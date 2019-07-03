@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>symbol-insert</title>
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    function filterSymbols() {
+      // Declare variables
+      var input, filter, ul, li, a, i, txtValue;
+      input = document.getElementById('symbolSearch');
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("symbols");
+      li = ul.getElementsByTagName('li');
+
+      // Loop through all list items, and hide those who don't match the search query
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <button id="symbolButton">Get symbols</button>
+    </div>
+    <input type="text" id="symbolSearch" onkeyup="filterSymbols()" placeholder="Search for symbols..">
+    <ul id="symbols"></ul>
+  </div>
+
+  <!-- notice the "../" here. It's because webview.js will be compiled in a different folder -->
+  <script src="../webview.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "symbol-insert",
+  "version": "0.1.0",
+  "engines": {
+    "sketch": ">=3.0"
+  },
+  "skpm": {
+    "name": "symbol-insert",
+    "manifest": "src/manifest.json",
+    "main": "symbol-insert.sketchplugin",
+    "assets": [
+      "assets/**/*"
+    ],
+    "sketch-assets-file": "sketch-assets/icons.sketch"
+  },
+  "scripts": {
+    "build": "skpm-build",
+    "watch": "skpm-build --watch",
+    "start": "skpm-build --watch",
+    "postinstall": "npm run build && skpm-link"
+  },
+  "devDependencies": {
+    "@skpm/builder": "^0.5.11",
+    "@skpm/extract-loader": "^2.0.2",
+    "btoa": "^1.2.1",
+    "css-loader": "^1.0.0",
+    "html-loader": "^0.5.1",
+    "mocha-js-delegate": "^0.2.0"
+  },
+  "resources": [
+    "resources/**/*.js"
+  ],
+  "dependencies": {
+    "sketch-module-web-view": "^3.0.1"
+  },
+  "author": "Michael Le <lifeofmle>"
+}

@@ -1,0 +1,24 @@
+{
+  "compatibleVersion": 3,
+  "bundleVersion": 1,
+  "commands": [
+    {
+      "name": "Symbol Insert",
+      "identifier": "Symbol Insert",
+      "script": "./command.js",
+      "shortcut": "cmd I",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
+    }
+  ],
+  "menu": {
+    "title": "Symbol Insert",
+    "items": [
+      "Symbol Insert"
+    ]
+  }
+}
