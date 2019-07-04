@@ -1,9 +1,9 @@
 import BrowserWindow from 'sketch-module-web-view';
 import { getWebview } from 'sketch-module-web-view/remote';
-const MochaJSDelegate = require("mocha-js-delegate");
 import UI from 'sketch/ui';
 import Sketch from 'sketch/dom';
-import Btoa from 'btoa';
+// import Btoa from 'btoa';
+// const MochaJSDelegate = require("mocha-js-delegate");
 
 const webviewIdentifier = 'symbol-insert.webview';
 
@@ -16,7 +16,8 @@ export default function () {
     show: false
   }
 
-  const browserWindow = new BrowserWindow(options)
+  const browserWindow = new BrowserWindow(options);
+  const webContents = browserWindow.webContents;
 
   // only show the window when the page has loaded to avoid a white flash
   browserWindow.once('ready-to-show', () => {
@@ -24,11 +25,13 @@ export default function () {
     // webContents
     //   .executeJavaScript(`listSymbols(${symbols})`)
     //   .catch(console.error);
+    var symbols = JSON.stringify(getSymbols());
+    webContents
+      .executeJavaScript(`displaySymbols(${symbols})`)
+      .catch(console.error);
 
     browserWindow.show();
-  })
-
-  const webContents = browserWindow.webContents;
+  });
 
   // print a message when the page loads
   // webContents.on('did-finish-load', () => {
@@ -54,38 +57,7 @@ export default function () {
     insertSymbol(symbolId);
   });
 
-
-  /*
-  This is so our script's JSContext sticks around,
-  instead of being destroyed as soon as the current execution block is finished.
-  */
-  var fiber = require('sketch/async').createFiber();
-
-  // Create a WebView
-  var webView = WebView.new();
-
-  var delegate = new MochaJSDelegate({
-    // define a property
-    counter: 1,
-
-    // define an instance method
-    "webView:didFinishLoadForFrame:": function(webView, webFrame) {
-      // access counter
-      const counter = this.counter;
-      sketch.UI.message("Loaded! " + counter);
-
-      fiber.cleanup();
-    }
-  });
-
-  // Set WebView's frame load delegate
-  webView.setFrameLoadDelegate(
-    delegate.new({
-      // set the property during the initialisation
-      counter: 4
-    })
-  );
-  webView.setMainFrameURL("http://google.com/");
+  //https://medium.com/madeawkward/how-to-create-floating-sketch-plugins-part-i-6241b82170d0
 
   browserWindow.loadURL(require('../resources/webview.html'))
 }
@@ -114,14 +86,14 @@ function getSymbols() {
         document
       );
       symbolReferences.forEach(symbolReference => {
-        var symbol = symbolReference.import();
-        const buffer = Sketch.export(symbol, {formats: 'png', output: false});
-        var imageLayer = new Sketch.Image({image: buffer});
-        var imageData = imageLayer.image;
-        var imageAsString = Btoa(buffer);
-        if (symbolItems.length <= 0){
-          console.log(symbolReference.name, imageAsString);
-        }
+        // var symbol = symbolReference.import();
+        // const buffer = Sketch.export(symbol, {formats: 'png', output: false});
+        // var imageLayer = new Sketch.Image({image: buffer});
+        // var imageData = imageLayer.image;
+        // var imageAsString = Btoa(buffer);
+        // if (symbolItems.length <= 0){
+        //   console.log(symbolReference.name, imageAsString);
+        // }
         symbolItems.push({
           id: symbolReference.id,
           name: symbolReference.name,
@@ -137,27 +109,49 @@ function insertSymbol(symbolId){
   var document = Sketch.getSelectedDocument();
   var masterSymbol = document.getSymbolMasterWithID(symbolId);
   var instance = masterSymbol.createNewInstance();
-  // instance.parent = document.selectedPage;
 
-  try {
-    var nativeDocument = document.sketchObject;
-    var insertAction = nativeDocument.actionsController().actionForID("MSInsertSymbolAction");
-    var tempMenuItem = NSMenuItem.alloc().init();
-
-    tempMenuItem.setRepresentedObject(instance.sketchObject);
-    insertAction.doPerformAction(tempMenuItem);
-
-    } catch(e) {
-        log("Exception: " + e);
+  // is there an active artboard?
+  var selectedArtboard = null;
+  var selectedLayers = document.selectedLayers;
+  if (selectedLayers) {
+    var layers = selectedLayers.layers;
+    if (layers) {
+      // get first layer that is an Artboard
+      for (var i=0; i <= layers.length-1; i++){
+        if (layers[i].type == 'Artboard'){
+          selectedArtboard = layers[i];
+          break;
+        }
+      }
     }
+  }
+
+  instance.parent = selectedArtboard ? selectedArtboard : document.selectedPage;
+
+  // try {
+  //   var nativeDocument = document.sketchObject;
+  //   var insertAction = nativeDocument.actionsController().actionForID("MSInsertSymbolAction");
+  //   var tempMenuItem = NSMenuItem.alloc().init();
+
+  //   tempMenuItem.setRepresentedObject(instance.sketchObject);
+  //   insertAction.doPerformAction(tempMenuItem);
+  // } catch(e) {
+  //     log("Exception: " + e);
+  // }
 }
 
 // ✅ Get all symbols from Symbol and Shared Libraries
 // ✅ Display name with slashes
-// TODO Load the symbols when open
+// ✅ Load the symbols when open
 // TODO Display preview of symbol
 // ✅ Filter for symbol
-// ✅  Insert symbol when selected
-// TODO Keyboard arrow on search
+// ✅ Insert symbol when selected
+// ✅ Keyboard arrow on search
+// ✅ Add to current artboard (if present)
 // TODO Style display symbols
+// ✅ Keyboard shortcut
 // TODO Insert symbol by mouse
+// TODO Drag and drop
+// TODO Logo
+// TODO Readme.md update
+// TODO Simple webpage

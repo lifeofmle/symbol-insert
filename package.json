@@ -22,10 +22,8 @@
   "devDependencies": {
     "@skpm/builder": "^0.5.11",
     "@skpm/extract-loader": "^2.0.2",
-    "btoa": "^1.2.1",
     "css-loader": "^1.0.0",
-    "html-loader": "^0.5.1",
-    "mocha-js-delegate": "^0.2.0"
+    "html-loader": "^0.5.1"
   },
   "resources": [
     "resources/**/*.js"

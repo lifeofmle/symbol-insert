@@ -6,7 +6,7 @@
       "name": "Symbol Insert",
       "identifier": "Symbol Insert",
       "script": "./command.js",
-      "shortcut": "cmd I",
+      "shortcut": "ctrl cmd i",
       "handlers": {
         "run": "onRun",
         "actions": {
@@ -17,6 +17,7 @@
   ],
   "menu": {
     "title": "Symbol Insert",
+    "isRoot": true,
     "items": [
       "Symbol Insert"
     ]

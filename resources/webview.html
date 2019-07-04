@@ -5,22 +5,67 @@
   <title>symbol-insert</title>
   <link rel="stylesheet" href="./style.css">
   <script>
-    function filterSymbols() {
-      // Declare variables
+    var currentFocus = -1;
+
+    function resetFocus() {
+      console.log('Reset all items');
+      var ul = document.getElementById("symbols");
+      var items = ul.getElementsByTagName('li');
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.remove("active");
+      }
+    }
+
+    function setActive() {
+      var ul = document.getElementById("symbols");
+      var items = ul.getElementsByTagName('li');
+      console.log('Current focus is now: ', currentFocus);
+      if (currentFocus >= items.length) currentFocus = (items.length - 1);
+      if (currentFocus < 0) currentFocus = 0;
+      console.log('Setting active: ', currentFocus);
+      items[currentFocus].classList.add("active");
+    }
+
+    function filterSymbols(e) {
       var input, filter, ul, li, a, i, txtValue;
+
       input = document.getElementById('symbolSearch');
+
+      if (!input.value) return;
+
       filter = input.value.toUpperCase();
       ul = document.getElementById("symbols");
-      li = ul.getElementsByTagName('li');
+      items = ul.getElementsByTagName('li');
 
-      // Loop through all list items, and hide those who don't match the search query
-      for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          li[i].style.display = "";
-        } else {
-          li[i].style.display = "none";
+      resetFocus();
+      if (e.keyCode == 40) {
+        // Down arrow
+        currentFocus++;
+        setActive();
+      } else if (e.keyCode == 38) {
+        // Up arrow
+        currentFocus--;
+        setActive();
+      } else if (e.keyCode == 13) {
+        // Enter key
+        e.preventDefault();
+        if (currentFocus > -1) {
+          var link = items[currentFocus].getElementsByClassName('symbol-link')[0];
+          if (link) {
+            link.click();
+          }
+        }
+      } else {
+        // Filter list
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < items.length; i++) {
+          a = items[i].getElementsByTagName("a")[0];
+          txtValue = a.textContent || a.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            items[i].style.display = "";
+          } else {
+            items[i].style.display = "none";
+          }
         }
       }
     }
@@ -28,10 +73,18 @@
 </head>
 <body>
   <div class="container">
-    <div>
+    <div style="display: none">
       <button id="symbolButton">Get symbols</button>
     </div>
-    <input type="text" id="symbolSearch" onkeyup="filterSymbols()" placeholder="Search for symbols..">
+    <input
+      id="symbolSearch"
+      type="text"
+      onkeydown="filterSymbols(event)"
+      placeholder="Search for symbols.."
+      autofocus
+      autocomplete="off"
+      readonly
+      onfocus="this.removeAttribute('readonly');">
     <ul id="symbols"></ul>
   </div>
 
