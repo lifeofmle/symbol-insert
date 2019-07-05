@@ -1,7 +1,7 @@
 {
   "name": "symbol-insert",
   "description": "Simple plugin to insert Sketch symbols",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "engines": {
     "sketch": ">=3.0"
   },
@@ -32,7 +32,7 @@
   "dependencies": {
     "sketch-module-web-view": "^3.0.1"
   },
-  "repository" : {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/lifeofmle/symbol-insert.git"
   },
