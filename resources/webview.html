@@ -7,8 +7,16 @@
   <script>
     var currentFocus = -1;
 
+    function resetList(){
+      currentFocus = -1;
+      var ul = document.getElementById("symbols");
+      var items = ul.getElementsByTagName('li');
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.remove("hide");
+      }
+    }
+
     function resetFocus() {
-      console.log('Reset all items');
       var ul = document.getElementById("symbols");
       var items = ul.getElementsByTagName('li');
       for (var i = 0; i < items.length; i++) {
@@ -18,26 +26,27 @@
 
     function setActive() {
       var ul = document.getElementById("symbols");
-      var items = ul.getElementsByTagName('li');
-      console.log('Current focus is now: ', currentFocus);
+      var items = ul.querySelectorAll('li:not(.hide)');
       if (currentFocus >= items.length) currentFocus = (items.length - 1);
       if (currentFocus < 0) currentFocus = 0;
-      console.log('Setting active: ', currentFocus);
       items[currentFocus].classList.add("active");
+      items[currentFocus].scrollIntoView(false);
     }
 
     function filterSymbols(e) {
+      console.log('here...');
       var input, filter, ul, li, a, i, txtValue;
 
       input = document.getElementById('symbolSearch');
-
-      if (!input.value) return;
-
-      filter = input.value.toUpperCase();
       ul = document.getElementById("symbols");
       items = ul.getElementsByTagName('li');
 
+      if (!input.value) {
+        resetList();
+      }
+
       resetFocus();
+      //if (e.keyCode != 40 && e.keyCode != 38 && e.keyCode != 13) {
       if (e.keyCode == 40) {
         // Down arrow
         currentFocus++;
@@ -50,21 +59,23 @@
         // Enter key
         e.preventDefault();
         if (currentFocus > -1) {
-          var link = items[currentFocus].getElementsByClassName('symbol-link')[0];
+          var visibleItem = ul.querySelectorAll('li:not(.hide)')[currentFocus];
+          var link = visibleItem.getElementsByClassName('symbol-link')[0];
           if (link) {
             link.click();
           }
         }
       } else {
+        filter = input.value.toUpperCase();
         // Filter list
         // Loop through all list items, and hide those who don't match the search query
         for (i = 0; i < items.length; i++) {
           a = items[i].getElementsByTagName("a")[0];
           txtValue = a.textContent || a.innerText;
           if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            items[i].style.display = "";
+            items[i].classList.remove("hide");
           } else {
-            items[i].style.display = "none";
+            items[i].classList.add("hide");
           }
         }
       }
@@ -72,21 +83,24 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <div style="display: none">
-      <button id="symbolButton">Get symbols</button>
+    <div class="container">
+      <div style="display: none">
+        <button id="symbolButton">Get symbols</button>
+      </div>
+      <input
+        id="symbolSearch"
+        type="text"
+        onkeydown="filterSymbols(event)"
+        placeholder="Search for symbols.."
+        autofocus
+        autocomplete="nope"
+        autocorrect="off"
+        autocapitalize="none"
+        spellcheck="false"
+        readonly
+        onfocus="this.removeAttribute('readonly');">
+      <ul id="symbols"></ul>
     </div>
-    <input
-      id="symbolSearch"
-      type="text"
-      onkeydown="filterSymbols(event)"
-      placeholder="Search for symbols.."
-      autofocus
-      autocomplete="off"
-      readonly
-      onfocus="this.removeAttribute('readonly');">
-    <ul id="symbols"></ul>
-  </div>
 
   <!-- notice the "../" here. It's because webview.js will be compiled in a different folder -->
   <script src="../webview.js"></script>

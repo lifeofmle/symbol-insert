@@ -3,6 +3,7 @@
 html {
   box-sizing: border-box;
   background: transparent;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont;
 
   /* Prevent the page to be scrollable */
   overflow: hidden;
@@ -38,11 +39,40 @@ input, textarea {
   user-select: auto;
 }
 
+input {
+  border: 1px solid transparent;
+  background: rgba(0,0,0,0.2);
+  padding: 16px;
+  font-size: 16px;
+  color: #D4D9D9;
+}
+input:focus {
+  outline: none;
+}
+
 #symbols {
+  list-style-type: none;
   height: 100%;
   overflow-y: scroll;
 }
 
+li + li {
+  border-top: 1px solid #484848;
+}
 li.active {
-  font-weight: bold;
+  background: #3D4A51;
+}
+li.hide {
+  display: none;
+}
+li:hover {
+  background: #232B2F;
+}
+
+a {
+  text-decoration: none;
+  color: #D4D9D9;
+}
+.symbol-container {
+  padding: 16px;
 }

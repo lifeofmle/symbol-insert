@@ -6,14 +6,19 @@ import Sketch from 'sketch/dom';
 // const MochaJSDelegate = require("mocha-js-delegate");
 
 const webviewIdentifier = 'symbol-insert.webview';
+var librarySymbols;
 
 export default function () {
   const options = {
     identifier: webviewIdentifier,
-    width: 375,
-    height: 500,
-    backgroundColor: '#ffffff',
-    show: false
+    title: 'Symbol Insert',
+    width: 640,
+    height: 410,
+    show: false,
+    vibrancy: 'ultra-dark',
+    webPreferences: {
+      devTools: false
+    }
   }
 
   const browserWindow = new BrowserWindow(options);
@@ -25,13 +30,18 @@ export default function () {
     // webContents
     //   .executeJavaScript(`listSymbols(${symbols})`)
     //   .catch(console.error);
-    var symbols = JSON.stringify(getSymbols());
+    librarySymbols = getSymbols();
+    var symbols = JSON.stringify(librarySymbols);
     webContents
       .executeJavaScript(`displaySymbols(${symbols})`)
       .catch(console.error);
 
     browserWindow.show();
   });
+
+  browserWindow.on('blur', () => {
+    browserWindow.close();
+  })
 
   // print a message when the page loads
   // webContents.on('did-finish-load', () => {
@@ -54,6 +64,7 @@ export default function () {
   });
 
   webContents.on('insertSymbol', (symbolId) => {
+    closeWebView();
     insertSymbol(symbolId);
   });
 
@@ -65,6 +76,10 @@ export default function () {
 // When the plugin is shutdown by Sketch (for example when the user disable the plugin)
 // we need to close the webview if it's open
 export function onShutdown() {
+  closeWebView();
+}
+
+function closeWebView() {
   const existingWebview = getWebview(webviewIdentifier)
   if (existingWebview) {
     existingWebview.close()
@@ -75,16 +90,10 @@ function getSymbols() {
   var symbolItems = [];
 
   var document = Sketch.getSelectedDocument();
-  var library = Sketch.Library.getLibraryForDocumentAtPath(document.path);
-
-  var symbolReferences = library.getImportableSymbolReferencesForDocument(document);
-
   var libraries = Sketch.Library.getLibraries();
   libraries.forEach(library => {
     if (library.enabled) {
-      var symbolReferences = library.getImportableSymbolReferencesForDocument(
-        document
-      );
+      var symbolReferences = library.getImportableSymbolReferencesForDocument(document);
       symbolReferences.forEach(symbolReference => {
         // var symbol = symbolReference.import();
         // const buffer = Sketch.export(symbol, {formats: 'png', output: false});
@@ -97,6 +106,7 @@ function getSymbols() {
         symbolItems.push({
           id: symbolReference.id,
           name: symbolReference.name,
+          reference: symbolReference
           // imageData: imageAsString
         });
       });
@@ -107,7 +117,12 @@ function getSymbols() {
 
 function insertSymbol(symbolId){
   var document = Sketch.getSelectedDocument();
-  var masterSymbol = document.getSymbolMasterWithID(symbolId);
+
+  var symbolItem = librarySymbols.find(function(element) {
+    return element.id === symbolId;
+  })
+
+  var masterSymbol = symbolItem.reference.import();
   var instance = masterSymbol.createNewInstance();
 
   // is there an active artboard?
@@ -143,15 +158,15 @@ function insertSymbol(symbolId){
 // ✅ Get all symbols from Symbol and Shared Libraries
 // ✅ Display name with slashes
 // ✅ Load the symbols when open
-// TODO Display preview of symbol
 // ✅ Filter for symbol
 // ✅ Insert symbol when selected
 // ✅ Keyboard arrow on search
 // ✅ Add to current artboard (if present)
-// TODO Style display symbols
+// ✅ Style display symbols
 // ✅ Keyboard shortcut
-// TODO Insert symbol by mouse
-// TODO Drag and drop
+// ✅ Fix interactions with keyboard and screen
 // TODO Logo
 // TODO Readme.md update
-// TODO Simple webpage
+// TODO Display preview of symbol
+// TODO Insert symbol by mouse
+// TODO Drag and drop
