@@ -21,9 +21,11 @@ A simple plugin to insert your Sketch symbols
 <img src="assets/screenshot.png" alt="Symbol Insert example screenshot" width="800" />
 
 ## Issues and requests
-You can ask me directly [@lifeofmle on Twitter](https://twitter.com/lifeofmle) or raise an issue/PR in Github
+You can ask me directly [@lifeofmle on Twitter](https://twitter.com/lifeofmle) or raise an [issue in Github](https://github.com/lifeofmle/symbol-insert/issues/new)
 
 ## How to say thanks
 If you are on Github, please 'star' this project on Github.
+
+If you are on social media, please share this link with your team and friends.
 
 If you want to donate to share the love, why not shout me a coffee ☕️, beer 🍺, or avocado 🥑 via [PayPal](https://www.paypal.me/lifeofmle/5)!
