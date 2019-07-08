@@ -4,6 +4,8 @@ A simple plugin to insert your Sketch symbols
 
 [![GitHub Release](https://img.shields.io/github/release/lifeofmle/symbol-insert.svg?style=popout)]()
 [![Github All Releases](https://img.shields.io/github/downloads/lifeofmle/symbol-insert/total.svg?style=popout)]()
+[![Twitter](https://img.shields.io/twitter/follow/lifeofmle.svg?style=social&label=Follow)]()
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/lifeofmle/5)
 
 ## Installation
 
@@ -17,3 +19,11 @@ A simple plugin to insert your Sketch symbols
 - Shortcut key: `ctrl`+`cmd`+`i`
 
 <img src="assets/screenshot.png" alt="Symbol Insert example screenshot" width="800" />
+
+## Issues and requests
+You can ask me directly [@lifeofmle on Twitter](https://twitter.com/lifeofmle) or raise an issue/PR in Github
+
+## How to say thanks
+If you are on Github, please 'star' this project on Github.
+
+If you want to donate to share the love, why not shout me a coffee ☕️, beer 🍺, or avocado 🥑 via [PayPal](https://www.paypal.me/lifeofmle/5)!
