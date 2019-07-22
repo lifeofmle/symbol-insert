@@ -13,8 +13,11 @@ A simple plugin to insert your Sketch symbols
 - Un-zip
 - Double-click on symbol-insert.sketchplugin
 
-## Usage
+## Features
+- Handles symbols from shared libraries and local symbols
+- Allows you to easily place the symbol with your mouse when inserting
 
+## Usage
 - Open through the plugin menu `Plugins -> Symbol Insert`
 - Shortcut key: `ctrl`+`cmd`+`i`
 
