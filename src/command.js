@@ -2,8 +2,6 @@ import BrowserWindow from 'sketch-module-web-view';
 import { getWebview } from 'sketch-module-web-view/remote';
 import UI from 'sketch/ui';
 import Sketch from 'sketch/dom';
-// import Btoa from 'btoa';
-// const MochaJSDelegate = require("mocha-js-delegate");
 
 const webviewIdentifier = 'symbol-insert.webview';
 var librarySymbols;
@@ -141,18 +139,18 @@ function insertSymbol(symbolId){
     }
   }
 
-  instance.parent = selectedArtboard ? selectedArtboard : document.selectedPage;
+  var masterSymbol = symbolItem.reference.import();
+  try {
+    var nativeDocument = document.sketchObject;
+    var symbolRef = MSSymbolMasterReference.referenceForShareableObject(masterSymbol.sketchObject);
+    var insertAction = nativeDocument.actionsController().actionForID("MSInsertSymbolAction");
+    var tempMenuItem = NSMenuItem.alloc().init();
 
-  // try {
-  //   var nativeDocument = document.sketchObject;
-  //   var insertAction = nativeDocument.actionsController().actionForID("MSInsertSymbolAction");
-  //   var tempMenuItem = NSMenuItem.alloc().init();
-
-  //   tempMenuItem.setRepresentedObject(instance.sketchObject);
-  //   insertAction.doPerformAction(tempMenuItem);
-  // } catch(e) {
-  //     log("Exception: " + e);
-  // }
+    tempMenuItem.setRepresentedObject([symbolRef]);
+    insertAction.doPerformAction(tempMenuItem);
+  } catch(e) {
+      log("Exception: " + e);
+  }
 }
 
 // ✅ Get all symbols from Symbol and Shared Libraries
@@ -165,8 +163,8 @@ function insertSymbol(symbolId){
 // ✅ Style display symbols
 // ✅ Keyboard shortcut
 // ✅ Fix interactions with keyboard and screen
-// TODO Logo
-// TODO Readme.md update
+// ✅ Logo
+// ✅ Readme.md update
 // TODO Display preview of symbol
-// TODO Insert symbol by mouse
-// TODO Drag and drop
+// ✅ Insert symbol by mouse
+// ✅ Drag and drop
