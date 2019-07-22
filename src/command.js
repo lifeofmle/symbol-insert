@@ -88,28 +88,35 @@ function getSymbols() {
   var symbolItems = [];
 
   var document = Sketch.getSelectedDocument();
+
+  var symbols = document.getSymbols();
+  symbols.forEach(symbolItem => {
+    var library = symbolItem.getLibrary();
+    // Handle local symbol definitions that are not from libraries
+    if (!library) {
+      symbolItems.push({
+        id: symbolItem.id,
+        name: symbolItem.name,
+        reference: symbolItem
+      });
+    }
+  })
+
   var libraries = Sketch.Library.getLibraries();
   libraries.forEach(library => {
     if (library.enabled) {
       var symbolReferences = library.getImportableSymbolReferencesForDocument(document);
       symbolReferences.forEach(symbolReference => {
-        // var symbol = symbolReference.import();
-        // const buffer = Sketch.export(symbol, {formats: 'png', output: false});
-        // var imageLayer = new Sketch.Image({image: buffer});
-        // var imageData = imageLayer.image;
-        // var imageAsString = Btoa(buffer);
-        // if (symbolItems.length <= 0){
-        //   console.log(symbolReference.name, imageAsString);
-        // }
+
         symbolItems.push({
           id: symbolReference.id,
           name: symbolReference.name,
           reference: symbolReference
-          // imageData: imageAsString
         });
       });
     }
   });
+
   return symbolItems;
 }
 
@@ -120,36 +127,25 @@ function insertSymbol(symbolId){
     return element.id === symbolId;
   })
 
-  var masterSymbol = symbolItem.reference.import();
-  var instance = masterSymbol.createNewInstance();
+  var reference = symbolItem.reference;
 
-  // is there an active artboard?
-  var selectedArtboard = null;
-  var selectedLayers = document.selectedLayers;
-  if (selectedLayers) {
-    var layers = selectedLayers.layers;
-    if (layers) {
-      // get first layer that is an Artboard
-      for (var i=0; i <= layers.length-1; i++){
-        if (layers[i].type == 'Artboard'){
-          selectedArtboard = layers[i];
-          break;
-        }
-      }
-    }
+  var masterSymbol = symbolItem.reference;
+  if (reference.type == 'ImportableObject') {
+    masterSymbol = symbolItem.reference.import();
   }
 
-  var masterSymbol = symbolItem.reference.import();
-  try {
-    var nativeDocument = document.sketchObject;
-    var symbolRef = MSSymbolMasterReference.referenceForShareableObject(masterSymbol.sketchObject);
-    var insertAction = nativeDocument.actionsController().actionForID("MSInsertSymbolAction");
-    var tempMenuItem = NSMenuItem.alloc().init();
+  if (masterSymbol) {
+    try {
+      var nativeDocument = document.sketchObject;
+      var symbolRef = MSSymbolMasterReference.referenceForShareableObject(masterSymbol.sketchObject);
+      var insertAction = nativeDocument.actionsController().actionForID("MSInsertSymbolAction");
+      var tempMenuItem = NSMenuItem.alloc().init();
 
-    tempMenuItem.setRepresentedObject([symbolRef]);
-    insertAction.doPerformAction(tempMenuItem);
-  } catch(e) {
-      log("Exception: " + e);
+      tempMenuItem.setRepresentedObject([symbolRef]);
+      insertAction.doPerformAction(tempMenuItem);
+    } catch(e) {
+        console.log("Exception: " + e);
+    }
   }
 }
 
@@ -168,3 +164,15 @@ function insertSymbol(symbolId){
 // TODO Display preview of symbol
 // ✅ Insert symbol by mouse
 // ✅ Drag and drop
+
+
+// var symbol = symbolReference.import();
+// const buffer = Sketch.export(symbol, {formats: 'png', output: false});
+// var imageLayer = new Sketch.Image({image: buffer});
+// var imageData = imageLayer.image;
+// var imageAsString = Btoa(buffer);
+// if (symbolItems.length <= 0){
+//   console.log(symbolReference.name, imageAsString);
+// }
+// ..set imageData as a base64 string
+// imageData: imageAsString
