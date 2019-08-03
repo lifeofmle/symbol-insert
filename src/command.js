@@ -24,10 +24,6 @@ export default function () {
 
   // only show the window when the page has loaded to avoid a white flash
   browserWindow.once('ready-to-show', () => {
-    // var symbols = getSymbols();
-    // webContents
-    //   .executeJavaScript(`listSymbols(${symbols})`)
-    //   .catch(console.error);
     librarySymbols = getSymbols();
     var symbols = JSON.stringify(librarySymbols);
     webContents
@@ -39,12 +35,7 @@ export default function () {
 
   browserWindow.on('blur', () => {
     browserWindow.close();
-  })
-
-  // print a message when the page loads
-  // webContents.on('did-finish-load', () => {
-  //   UI.message('UI loaded!')
-  // })
+  });
 
   // add a handler for a call from web content's javascript
   webContents.on('nativeLog', s => {
@@ -89,25 +80,23 @@ function getSymbols() {
 
   var document = Sketch.getSelectedDocument();
 
-  var symbols = document.getSymbols();
-  symbols.forEach(symbolItem => {
-    var library = symbolItem.getLibrary();
-    // Handle local symbol definitions that are not from libraries
-    if (!library) {
+  const localSymbols = getLocalSymbols(document);
+
+  console.log('Local symbols: ', localSymbols.length);
+  if (localSymbols){
+    localSymbols.forEach(localSymbol => {
       symbolItems.push({
-        id: symbolItem.id,
-        name: symbolItem.name,
-        reference: symbolItem
+        id: localSymbol.id,
+        name: localSymbol.name
       });
-    }
-  })
+    });
+  }
 
   var libraries = Sketch.Library.getLibraries();
   libraries.forEach(library => {
     if (library.enabled) {
       var symbolReferences = library.getImportableSymbolReferencesForDocument(document);
       symbolReferences.forEach(symbolReference => {
-
         symbolItems.push({
           id: symbolReference.id,
           name: symbolReference.name,
@@ -116,7 +105,20 @@ function getSymbols() {
       });
     }
   });
+  console.log('Got symbols: ', symbolItems.length);
+  return symbolItems;
+}
 
+function getLocalSymbols(document) {
+  var symbolItems = [];
+  var symbols = document.getSymbols();
+  symbols.forEach(symbolItem => {
+    symbolItems.push({
+      id: symbolItem.id,
+      name: symbolItem.name,
+      reference: symbolItem
+    });
+  });
   return symbolItems;
 }
 
@@ -128,8 +130,15 @@ function insertSymbol(symbolId){
   })
 
   var reference = symbolItem.reference;
+  if (!reference) {
+    // This is specific to this implementation where local symbols we don't populate reference
+    // because when converting it to a string to pass to the webview, the symbol reference would
+    // create a longer string that causes delays when loading the UI
+    reference = document.getSymbols().find(element => element.id === symbolId);
+  }
 
-  var masterSymbol = symbolItem.reference;
+  var masterSymbol = reference;
+
   if (reference.type == 'ImportableObject') {
     masterSymbol = symbolItem.reference.import();
   }

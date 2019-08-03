@@ -21,7 +21,7 @@ A simple plugin to insert your Sketch symbols
 - Open through the plugin menu `Plugins -> Symbol Insert`
 - Shortcut key: `ctrl`+`cmd`+`i`
 
-<img src="assets/screenshot.png" alt="Symbol Insert example screenshot" width="800" />
+<img src="documentation/screenshot.png" alt="Symbol Insert example screenshot" width="800" />
 
 ## Issues and requests
 You can ask me directly [@lifeofmle on Twitter](https://twitter.com/lifeofmle) or raise an [issue in Github](https://github.com/lifeofmle/symbol-insert/issues/new)
