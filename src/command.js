@@ -82,7 +82,6 @@ function getSymbols() {
 
   const localSymbols = getLocalSymbols(document);
 
-  console.log('Local symbols: ', localSymbols.length);
   if (localSymbols){
     localSymbols.forEach(localSymbol => {
       symbolItems.push({
@@ -105,7 +104,6 @@ function getSymbols() {
       });
     }
   });
-  console.log('Got symbols: ', symbolItems.length);
   return symbolItems;
 }
 
@@ -113,11 +111,15 @@ function getLocalSymbols(document) {
   var symbolItems = [];
   var symbols = document.getSymbols();
   symbols.forEach(symbolItem => {
-    symbolItems.push({
-      id: symbolItem.id,
-      name: symbolItem.name,
-      reference: symbolItem
-    });
+    // include ones that don't have a library because this means it is a local one
+    var library = symbolItem.getLibrary();
+    if (!library) {
+      symbolItems.push({
+        id: symbolItem.id,
+        name: symbolItem.name,
+        reference: symbolItem
+      });
+    }
   });
   return symbolItems;
 }

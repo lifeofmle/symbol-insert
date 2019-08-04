@@ -33,8 +33,24 @@
       items[currentFocus].scrollIntoView(false);
     }
 
+    function matchesFilter(text, filter) {
+      // Create regex to check for this match
+      // (Button).*(Slim).*(Idle)
+      const filterArray = filter.split(' ');
+      var filter = '';
+      filterArray.map((item, i) => {
+        filter = filter.concat('(', item, ')');
+        if (filterArray.length !== i + 1) {
+          // if not the last one, append the .*
+          filter = filter.concat('.*');
+        }
+      });
+      console.log('Filter: ', filter, filter, filterArray);
+      const regex = new RegExp(filter, 'i');
+      return text.match(regex) ? true : false;
+    }
+
     function filterSymbols(e) {
-      console.log('here...');
       var input, filter, ul, li, a, i, txtValue;
 
       input = document.getElementById('symbolSearch');
@@ -66,13 +82,12 @@
           }
         }
       } else {
-        filter = input.value.toUpperCase();
         // Filter list
         // Loop through all list items, and hide those who don't match the search query
         for (i = 0; i < items.length; i++) {
           a = items[i].getElementsByTagName("a")[0];
           txtValue = a.textContent || a.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          if (matchesFilter(txtValue, input.value)) {
             items[i].classList.remove("hide");
           } else {
             items[i].classList.add("hide");
@@ -90,7 +105,7 @@
       <input
         id="symbolSearch"
         type="text"
-        onkeydown="filterSymbols(event)"
+        onkeyup="filterSymbols(event)"
         placeholder="Search for symbols.."
         autofocus
         autocomplete="nope"
