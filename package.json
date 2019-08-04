@@ -1,7 +1,7 @@
 {
   "name": "symbol-insert",
   "description": "Simple plugin to insert Sketch symbols",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "engines": {
     "sketch": ">=3.0"
   },
