@@ -16,6 +16,7 @@ A simple plugin to insert your Sketch symbols
 ## Features
 - Handles symbols from shared libraries and local symbols
 - Allows you to easily place the symbol with your mouse when inserting
+- Partial text filter is supported so that when a symbol is called "1 Component/Button/1 Primary/1 Idle" it can be found by typing "b p idl"
 
 ## Usage
 - Open through the plugin menu `Plugins -> Symbol Insert`
