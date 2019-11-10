@@ -31,7 +31,7 @@
     "resources/**/*.js"
   ],
   "dependencies": {
-    "sketch-module-web-view": "^3.0.1"
+    "sketch-module-web-view": "^3.4.1"
   },
   "repository": {
     "type": "git",

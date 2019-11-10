@@ -3777,10 +3777,10 @@ signal-exit@^3.0.0:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-sketch-module-web-view@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/sketch-module-web-view/-/sketch-module-web-view-3.1.0.tgz#cf8f9ed111a9f8eaf41215f0cab760e4122bdedf"
-  integrity sha512-H3WmZDPBWNIWNqjJ5FW1dff3cy7xUnX4X6V1502QVaJZ6TsZGD1Btu91nC3BXavk5fjpggXSmw52FU3UwgWISw==
+sketch-module-web-view@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/sketch-module-web-view/-/sketch-module-web-view-3.4.1.tgz#d9a5646d784de610a34af212c03b5c1ff0f83788"
+  integrity sha512-iGJbtYWldiAE7zztla3dhoVu2xSf8lxycWnikaybtqcenYE0CY6UnIeFW4KjS6SOO3+KMXPaY5agJb79L0uG/Q==
   dependencies:
     mocha-js-delegate "^0.2.0"
 
